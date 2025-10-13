@@ -19,7 +19,7 @@ int main(void) {
     XEvent xevent = {0};
 
     display = XOpenDisplay(NULL);
-    if (display == NULL) {
+    if(display == NULL) {
         perror("Error connecting to X11 server");
         exit(EXIT_FAILURE);
     }
@@ -27,7 +27,7 @@ int main(void) {
     int attributes[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
     Window root = DefaultRootWindow(display);
     XVisualInfo *vi = glXChooseVisual(display, 0, attributes);
-    if (vi == NULL) {
+    if(vi == NULL) {
         printf("No suitable visual found\n");
         exit(0);
     }
@@ -41,8 +41,9 @@ int main(void) {
     u32 width = 800;
     u32 height = 800;
     u32 border_width = 0;
-    window = XCreateWindow(display, root, x, y, width, height, border_width, vi->depth, InputOutput,
-                           vi->visual, CWColormap | CWEventMask, &win_attribs);
+    window = XCreateWindow(display, root, x, y, width, height, border_width,
+                           vi->depth, InputOutput, vi->visual,
+                           CWColormap | CWEventMask, &win_attribs);
     XMapWindow(display, window);
     XStoreName(display, window, "GUI");
     gl_context = get_glx_context(display);
@@ -50,9 +51,9 @@ int main(void) {
     glEnable(GL_DEPTH_TEST);
 
     bool window_should_close = false;
-    while (!window_should_close) {
+    while(!window_should_close) {
         XNextEvent(display, &xevent);
-        if (xevent.type == KeyPress) {
+        if(xevent.type == KeyPress) {
             window_should_close = true;
         }
         XGetWindowAttributes(display, window, &window_attribs);

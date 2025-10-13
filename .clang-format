@@ -8,4 +8,17 @@ SortIncludes: Never
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Always
 BreakBeforeBraces: Attach
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: false # if(...) rather than if (...)
+  AfterFunctionDeclarationName: false # void f(); rather than void f ();
+  AfterFunctionDefinitionName: false # void f() {} rather than void f () {}
+  AfterForeachMacros: false # FOREACH(...) rather than FOREACH (...)
+  AfterIfMacros: false # IF(...) rather than IF (...)
+  AfterNot: false # not(a || b) rather than not (a || b)
+  AfterOverloadedOperator: false # operator++(x) rather than operator++ (x)
+  AfterPlacementOperator: false # new(buf) rather than new (buf)
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
 BinPackArguments: true
