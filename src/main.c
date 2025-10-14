@@ -35,7 +35,6 @@ int main(void) {
     Colormap colormap = XCreateColormap(display, root, vi->visual, AllocNone);
     win_attribs.colormap = colormap;
     win_attribs.event_mask = ExposureMask | KeyPressMask;
-
     u32 x = 0;
     u32 y = 0;
     u32 width = 800;
@@ -47,6 +46,7 @@ int main(void) {
     XMapWindow(display, window);
     XStoreName(display, window, "GUI");
     gl_context = get_glx_context(display);
+    return -1;
     glXMakeContextCurrent(display, window, window, gl_context);
     glEnable(GL_DEPTH_TEST);
 

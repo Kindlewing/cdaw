@@ -1,19 +1,53 @@
-#include "str.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "str.h"
 
-string string_create(const char *str) {
+string string_from_cstring(const char *str) {
     if(str == NULL) {
-        perror("Cannot create string from a null pointer");
+        fprintf(stderr, "Cannot create string from a null pointer\n");
         exit(EXIT_FAILURE);
     }
     string s = {0};
-    size_t i = 0;
+
     // get length
-    while(str[i] != '\0') {
-        i += 1;
+    size_t len = 0;
+    while(str[len] != '\0') {
+        len += 1;
     }
-    s.length = i;
+    s.length = len;
     s.capacity = s.length + 1;
+    s.data = malloc(sizeof(s.capacity));
+    if(!s.data) {
+        fprintf(stderr, "Malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
+    size_t i = 0;
+    while(str[i] != '\0') {
+        s.data[i] = str[i];
+    }
+    return s;
+}
+
+string string_slice(string *str, u8 start, u8 end) {
+    string slice = {0};
+    if(!string_is_valid(str) || start >= end || end > str->length) {
+        return slice;
+    }
+    slice.data = str->data + start;
+    slice.length = end;
+    slice.capacity = end + 1;
+    return slice;
+}
+
+rune string_at(string *str, u8 at) {
+    if(at > str->length) {
+        fprintf(stderr, "index out of bounds\n");
+        exit(EXIT_FAILURE);
+    }
+    return str->data[at];
+}
+
+bool string_is_valid(string *str) {
+    return str->data != NULL && str->length > 0;
 }

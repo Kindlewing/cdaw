@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include "linux_gl_context.h"
 
 static bool ctx_error_occurred = false;
@@ -8,48 +11,12 @@ static int ctx_error_handler(Display *display, XErrorEvent *event) {
     return 0;
 }
 
-static bool is_extension_supported(const char *ext_list,
-                                   const char *extension) {
-    if(!ext_list || !extension) {
+static bool is_extension_supported(string *ext_list, string *extension) {
+    if(!string_is_valid(ext_list) || !string_is_valid(extension)) {
         return false;
     }
 
-    if(*extension == '\0') {
-        return false;
-    }
-
-    for(const char *p = extension; *p; ++p) {
-        if(*p == ' ') {
-            return false;
-        }
-    }
-    const char *ext_ptr = ext_list;
-    while(*ext_ptr) {
-        // skip leading spaces
-        while(*ext_ptr == ' ')
-            ++ext_ptr;
-        if(*ext_ptr == '\0')
-            break;
-
-        const char *token_start = ext_ptr;
-        const char *token_end = ext_ptr;
-        while(*token_end && *token_end != ' ')
-            ++token_end;
-
-        const char *a = token_start;
-        const char *b = extension;
-        while(*a && *b && a < token_end && *a == *b) {
-            ++a;
-            ++b;
-        }
-
-        if(a == token_end && *b == '\0') {
-            return true;
-        }
-        ext_ptr = token_end;
-    }
-
-    return false;
+    return true;
 }
 
 GLXContext get_glx_context(Display *display) {
@@ -98,10 +65,12 @@ GLXContext get_glx_context(Display *display) {
     GLXFBConfig best_fb_config = fb_configs[0];
     XFree(fb_configs);
 
-    const char *glx_exts =
-        glXQueryExtensionsString(display, DefaultScreen(display));
-    bool has_arb_create_context =
-        is_extension_supported(glx_exts, "GLX_ARB_create_context");
+    string glx_exts = string_from_cstring(
+        glXQueryExtensionsString(display, DefaultScreen(display)));
+    string ctx_ext = string_from_cstring("GLX_ARB_create_context");
+    printf("Extension: %s\n", ctx_ext.data);
+    printf("Extension list: %s\n", glx_exts.data);
+    bool has_arb_create_context = is_extension_supported(&glx_exts, &ctx_ext);
 
     typedef GLXContext (*pfn_glx_create_context_attribs_arb)(
         Display *, GLXFBConfig, GLXContext, Bool, const int *);

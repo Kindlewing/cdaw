@@ -14,6 +14,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
 	src/main.c
 	src/platform/linux/linux_gl_context.c
+	src/core/str.c
+	src/core/arena.c
 )
 
 find_package(X11 REQUIRED)
