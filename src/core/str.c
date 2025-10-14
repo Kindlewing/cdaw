@@ -25,7 +25,9 @@ string string_from_cstring(const char *str) {
     size_t i = 0;
     while(str[i] != '\0') {
         s.data[i] = str[i];
+        i += 1;
     }
+    s.data[s.capacity] = '\0';
     return s;
 }
 

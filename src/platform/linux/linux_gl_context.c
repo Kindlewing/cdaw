@@ -11,11 +11,20 @@ static int ctx_error_handler(Display *display, XErrorEvent *event) {
     return 0;
 }
 
+//"GLX_ARB_create_context"
 static bool is_extension_supported(string *ext_list, string *extension) {
+    u8 start = 0;
+    u8 current = 0;
     if(!string_is_valid(ext_list) || !string_is_valid(extension)) {
         return false;
     }
-
+    while(string_at(ext_list, current) != ' ') {
+        current += 1;
+    }
+    string word = string_slice(ext_list, start, current);
+    printf("Current Extension: %s\n", word.data);
+    // Now we're at a space
+    start = current;
     return true;
 }
 
@@ -65,11 +74,10 @@ GLXContext get_glx_context(Display *display) {
     GLXFBConfig best_fb_config = fb_configs[0];
     XFree(fb_configs);
 
+    printf("About to get glx_exts\n");
     string glx_exts = string_from_cstring(
         glXQueryExtensionsString(display, DefaultScreen(display)));
     string ctx_ext = string_from_cstring("GLX_ARB_create_context");
-    printf("Extension: %s\n", ctx_ext.data);
-    printf("Extension list: %s\n", glx_exts.data);
     bool has_arb_create_context = is_extension_supported(&glx_exts, &ctx_ext);
 
     typedef GLXContext (*pfn_glx_create_context_attribs_arb)(

@@ -45,8 +45,8 @@ int main(void) {
                            CWColormap | CWEventMask, &win_attribs);
     XMapWindow(display, window);
     XStoreName(display, window, "GUI");
+    printf("About to get GLX context\n");
     gl_context = get_glx_context(display);
-    return -1;
     glXMakeContextCurrent(display, window, window, gl_context);
     glEnable(GL_DEPTH_TEST);
 
