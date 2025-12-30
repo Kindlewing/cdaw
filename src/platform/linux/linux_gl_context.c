@@ -1,7 +1,10 @@
+#include <complex.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "linux_gl_context.h"
+#include "str.h"
+#include "typedefs.h"
 
 static bool ctx_error_occurred = false;
 static int ctx_error_handler(Display *display, XErrorEvent *event) {
@@ -18,14 +21,21 @@ static bool is_extension_supported(string *ext_list, string *extension) {
     if(!string_is_valid(ext_list) || !string_is_valid(extension)) {
         return false;
     }
-    while(string_at(ext_list, current) != ' ') {
+    while(current < ext_list->length) {
+        rune c = string_at(ext_list, current);
+        switch(c) {
+            case ' ': {
+                string word = string_slice(ext_list, start, current);
+                if(string_eq(&word, extension)) {
+                    return true;
+                }
+                start = current + 1;
+                break;
+            }
+        }
         current += 1;
     }
-    string word = string_slice(ext_list, start, current);
-    printf("Current Extension: %s\n", word.data);
-    // Now we're at a space
-    start = current;
-    return true;
+    return false;
 }
 
 GLXContext get_glx_context(Display *display) {

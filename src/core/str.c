@@ -50,6 +50,19 @@ rune string_at(string *str, u8 at) {
     return str->data[at];
 }
 
+bool string_eq(string *str1, string *str2) {
+    if(str1->length != str2->length || str1->capacity != str2->capacity) {
+        return false;
+    }
+    u8 curr = 0;
+    while(curr < str1->length) {
+        if(string_at(str1, curr) != string_at(str2, curr)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool string_is_valid(string *str) {
     return str->data != NULL && str->length > 0;
 }
